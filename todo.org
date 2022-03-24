@@ -1,0 +1,10 @@
+* read in map of querty keys
+  code -> name
+* print name of pressed key
+* read in map of notes
+  keyname -> note press
+* functional map
+  keyname -> execute function
+  keyname -> arpeggiator
+* multi key binding like Shift-A,Alt-9734,MC-A #optional 
+  only single keys are allowed to be held, other keys must be one-shot or toggle

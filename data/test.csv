@@ -1,0 +1,4 @@
+# first line defines the data
+type, key, hello, values
+# bind the a key to C3
+note,A,C3
