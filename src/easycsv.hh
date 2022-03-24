@@ -8,8 +8,9 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
-typedef void (*row_parser_callback)(std::vector<std::string>* row_items);
+typedef std::function<void(std::vector<std::string>* row_items)> row_parser_callback;
 
 class CSVParser {
 private:
