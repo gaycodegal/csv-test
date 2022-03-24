@@ -10,5 +10,7 @@ clean:
 	rm -f $(OBJS) $(wildcard *~) $(wildcard $(SRC)/*~) $(wildcard $(INC)/*~)
 fclean:
 	rm -f $(OBJS) $(OBJ_NAME) $(wildcard *~)
-re:
+format:
+	clang-format -i $(find src/ -iname '*.cc')
+	clang-format -i $(find src/ -iname '*.hh')
 
