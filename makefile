@@ -1,7 +1,7 @@
 SRC = ./src
 OBJS = $(patsubst %.cc,%.o,$(wildcard $(SRC)/*.cc))
 CC = g++
-CPPFLAGS = -lcsv -I./src
+CPPFLAGS = -std=c++20 -lcsv -I./src
 OBJ_NAME = main
 
 all: $(OBJS)
