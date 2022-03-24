@@ -11,6 +11,6 @@ clean:
 fclean:
 	rm -f $(OBJS) $(OBJ_NAME) $(wildcard *~)
 format:
-	clang-format -i $(find src/ -iname '*.cc')
-	clang-format -i $(find src/ -iname '*.hh')
+	clang-format -i $(wildcard $(SRC)/*.cc)
+	clang-format -i $(wildcard $(SRC)/*.hh)
 

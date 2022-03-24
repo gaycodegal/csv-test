@@ -1,8 +1,8 @@
 #include "easycsv.hh"
 
 // declare callbacks; static to not pollute the namespace
-static void cb1_item (void *p, size_t len, void *data);
-static void cb2_assemble_row (int c, void *data);
+static void cb1_item(void *p, size_t len, void *data);
+static void cb2_assemble_row(int c, void *data);
 static int is_space(unsigned char c);
 static int is_term(unsigned char c);
 
@@ -17,18 +17,15 @@ CSVParser::CSVParser() {
   csv_set_term_func(parser, is_term);
 }
 
-CSVParser::~CSVParser() {
-  csv_free(this->parser);
-}
+CSVParser::~CSVParser() { csv_free(this->parser); }
 
 void CSVParser::setOptions(unsigned char options) {
   csv_set_opts(parser, options);
 }
 
-void CSVParser::readFile
-(const std::string filename,
- std::vector<std::string> *expected_columns,
- row_parser_callback row_parser) {
+void CSVParser::readFile(const std::string filename,
+                         std::vector<std::string> *expected_columns,
+                         row_parser_callback row_parser) {
   printf("%s \n", filename.c_str());
   this->row_parser = row_parser;
   printf("%s \n", filename.c_str());
@@ -45,13 +42,16 @@ void CSVParser::readFile
   row_items = new std::vector<std::string>(expected_columns->size());
   fp = fopen(filename.c_str(), "rb");
   if (!fp) {
-    fprintf(stderr, "Failed to open %s: %s\n", filename.c_str(), strerror(errno));
+    fprintf(stderr, "Failed to open %s: %s\n", filename.c_str(),
+            strerror(errno));
     return;
   }
 
-  while ((bytes_read=fread(buf, 1, 1024, fp)) > 0) {
-    if (csv_parse(parser, buf, bytes_read, cb1_item, cb2_assemble_row, (void *)this) != bytes_read) {
-      fprintf(stderr, "Error while parsing file: %s\n", csv_strerror(csv_error(parser)));
+  while ((bytes_read = fread(buf, 1, 1024, fp)) > 0) {
+    if (csv_parse(parser, buf, bytes_read, cb1_item, cb2_assemble_row,
+                  (void *)this) != bytes_read) {
+      fprintf(stderr, "Error while parsing file: %s\n",
+              csv_strerror(csv_error(parser)));
     }
   }
 
@@ -62,14 +62,14 @@ void CSVParser::readFile
     fclose(fp);
     return;
   }
-  
+
   fclose(fp);
-  printf("%s: %lu fields, %lu rows\n", filename.c_str(), this->fields, this->rows);
-  
+  printf("%s: %lu fields, %lu rows\n", filename.c_str(), this->fields,
+         this->rows);
 }
 
-inline void CSVParser::callback_item(void *string_pointer, size_t len){
-  char *current_field = (char*)string_pointer;
+inline void CSVParser::callback_item(void *string_pointer, size_t len) {
+  char *current_field = (char *)string_pointer;
   current_field[len] = '\0';
   // ignore rows starting with #, as they are comments
   if (this->is_first_item) {
@@ -91,7 +91,7 @@ inline void CSVParser::callback_item(void *string_pointer, size_t len){
   }
 }
 
-inline void CSVParser::callback_assemble_row(int c){
+inline void CSVParser::callback_assemble_row(int c) {
   if (!is_comment) {
     row_parser(row_items);
     rows++;
@@ -103,12 +103,12 @@ inline void CSVParser::callback_assemble_row(int c){
 }
 
 // wrapper around inline function callback_item
-static void cb1_item (void *p, size_t len, void *data) {
+static void cb1_item(void *p, size_t len, void *data) {
   ((CSVParser *)data)->callback_item(p, len);
 }
 
 // wrapper around inline function callback_assemble_row
-static void cb2_assemble_row (int c, void *data) {
+static void cb2_assemble_row(int c, void *data) {
   ((CSVParser *)data)->callback_assemble_row(c);
 }
 
@@ -121,4 +121,3 @@ static int is_term(unsigned char c) {
   if (c == CSV_CR || c == CSV_LF) return 1;
   return 0;
 }
-
