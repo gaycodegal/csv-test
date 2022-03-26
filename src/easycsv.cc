@@ -41,7 +41,7 @@ struct CSVInfo {
 inline void CSVInfo::callback_item(std::span<char> str) {
   // ignore rows starting with #, as they are comments
   if (is_first_item) {
-    if (str[0] == '#') {
+    if (!str.empty() && str[0] == '#') {
       is_comment = true;
     }
   }
