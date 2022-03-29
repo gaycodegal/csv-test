@@ -46,11 +46,9 @@ inline void CSVInfo::callback_item(std::span<char> str) {
     }
   }
   if (!is_comment) {
-    std::cout << "found: " << std::string_view{str.begin(), str.end()} << "\n";
     if (fields < row_items.size()) {
       // copy constructor, should be ok
       row_items[fields] = std::string{str.begin(), str.end()};
-      std::cout << row_items.size() << "\n";
     }
     fields++;
   }
@@ -58,7 +56,7 @@ inline void CSVInfo::callback_item(std::span<char> str) {
 
 inline void CSVInfo::callback_assemble_row(int c) {
   if (!is_comment) {
-    row_parser(&row_items);
+    row_parser(row_items);
     rows++;
     is_first_line = false;
   }
@@ -102,5 +100,5 @@ void CSVParser::readFile(FILE *file, std::vector<std::string> expected_columns,
 
   csv_fini(&parser, &CSVInfo::cb1_item, &CSVInfo::cb2_assemble_row, &info);
 
-  std::cout << info.fields << " fields, " << info.rows << " rows\n";
+  std::cout << info.rows << " rows\n";
 }
