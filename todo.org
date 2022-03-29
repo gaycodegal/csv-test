@@ -1,8 +1,10 @@
-* read in map of querty keys
-  code -> name
-* print name of pressed key
+* DONE read in map of querty keys
+  code -> keyname
 * read in map of notes
   keyname -> note press
+
+  In this step, we will want to convert musical notation such as B3 or C6b
+or A-1# into their corresponding midi note values (0-127)
 * functional map
   keyname -> execute function
   keyname -> arpeggiator
