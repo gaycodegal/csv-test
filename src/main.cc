@@ -1,6 +1,5 @@
 /*
-csvinfo - reads CSV data from input file(s) and reports the number
-          of fields and rows encountered in each file
+  csv test - read in a keymap and store it in memory
 */
 
 #include <csv.h>
@@ -20,54 +19,41 @@ std::optional<int> parse_int(std::string s);
 enum KeyMap { code, name };
 
 int main(int argc, char* argv[]) {
-  if (argc < 2) {
-    fprintf(stderr, "Usage: csvinfo [-s] files\n");
-    exit(EXIT_FAILURE);
-  }
+  if (auto p{CSVParser::create(0)}; !p) {
+    std::cerr << "Failed to initialize csv parser\n";
+  } else {
+    std::string filename = "./data/qwerty.csv";
 
-  while (*(++argv)) {
-    unsigned char options = 0;
-    if (strcmp(*argv, "-s") == 0) {
-      options = CSV_STRICT;
-      continue;
+    FILE* fp = fopen(filename.c_str(), "rb");
+    if (!fp) {
+      std::cout << "Failed to open " << filename << ": " << strerror(errno)
+                << "\n";
+      return EXIT_FAILURE;
     }
 
-    if (auto p{CSVParser::create(options)}; !p) {
-      std::cerr << "Failed to initialize csv parser\n";
-    } else {
-      std::string filename{*argv};
+    std::unordered_map<std::string, int> qwerty_map;
 
-      FILE* fp = fopen(filename.c_str(), "rb");
-      if (!fp) {
-        std::cout << "Failed to open " << filename << ": " << strerror(errno)
-                  << "\n";
-        return EXIT_FAILURE;
-      }
-
-      std::unordered_map<std::string, int> qwerty_map;
-
-      p->readFile(fp, std::vector<std::string>{"code", "name"},
-                  [&qwerty_map](std::vector<std::string> row) {
-                    /*for (auto &item: row) {
-                      std::cout << item << ' ';
-                      }
-                    std::cout << std::endl;*/
-                    if (auto code{parse_int(row[KeyMap::code])}; code) {
-                      qwerty_map[row[KeyMap::name]] = code.value();
+    p->readFile(fp, std::vector<std::string>{"code", "name"},
+                [&qwerty_map](std::vector<std::string> row) {
+                  /*for (auto &item: row) {
+                    std::cout << item << ' ';
                     }
-                  });
+                    std::cout << std::endl;*/
+                  if (auto code{parse_int(row[KeyMap::code])}; code) {
+                    qwerty_map[row[KeyMap::name]] = code.value();
+                  }
+                });
 
-      // check that qwerty map can read a = 65
-      std::cout << "should be 65 (a): " << qwerty_map["a"] << std::endl;
+    // check that qwerty map can read a = 65
+    std::cout << "should be 65 (a): " << qwerty_map["a"] << std::endl;
 
-      if (ferror(fp)) {
-        std::cerr << "Error while reading file " << filename << "\n";
-        fclose(fp);
-        return EXIT_FAILURE;
-      }
-
+    if (ferror(fp)) {
+      std::cerr << "Error while reading file " << filename << "\n";
       fclose(fp);
+      return EXIT_FAILURE;
     }
+
+    fclose(fp);
   }
 }
 
