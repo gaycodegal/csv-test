@@ -42,7 +42,7 @@ int string_to_midi(std::string note) {
   // negative octaves
   int multiplier = 1;
   if (note[note_index] == '-') {
-    if (note.length() < 3) {
+    if (note.length() < note_index + 1) {
       return MIDI_ERROR;
     }
     ++note_index;
