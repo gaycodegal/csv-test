@@ -10,13 +10,11 @@
 #include <string.h>
 
 #include <iostream>
-#include <sstream>
 #include <unordered_map>
 
 #include "easycsv.hh"
 #include "util.hh"
 
-std::optional<int> parse_int(std::string s);
 enum KeyMap { code, name };
 
 int main(int argc, char* argv[]) {
@@ -47,10 +45,10 @@ int main(int argc, char* argv[]) {
 
     // check that qwerty map can read a = 65
     std::cout << "should be 65 (a): " << qwerty_map["a"] << std::endl;
-    std::cout << "A4b(80): " << string_to_midi("A4b") << std::endl;
+    std::cout << "Ab4(80): " << string_to_midi("Ab4") << std::endl;
     std::cout << "C0(24): " << string_to_midi("C0") << std::endl;
     std::cout << "C-2(0): " << string_to_midi("C-2") << std::endl;
-    std::cout << "F2(53): " << string_to_midi("F2") << std::endl;
+    std::cout << "F#2(54): " << string_to_midi("F#2") << std::endl;
 
     if (ferror(fp)) {
       std::cerr << "Error while reading file " << filename << "\n";
@@ -60,15 +58,4 @@ int main(int argc, char* argv[]) {
 
     fclose(fp);
   }
-}
-
-std::optional<int> parse_int(std::string s) {
-  char c;
-  std::stringstream ss(s);
-  int i;
-  ss >> i;
-  if (ss.fail() || ss.get(c)) {
-    return std::nullopt;
-  }
-  return {i};
 }
