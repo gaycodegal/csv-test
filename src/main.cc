@@ -14,6 +14,7 @@
 #include <unordered_map>
 
 #include "easycsv.hh"
+#include "util.hh"
 
 std::optional<int> parse_int(std::string s);
 enum KeyMap { code, name };
