@@ -47,6 +47,10 @@ int main(int argc, char* argv[]) {
 
     // check that qwerty map can read a = 65
     std::cout << "should be 65 (a): " << qwerty_map["a"] << std::endl;
+    std::cout << "A4b(80): " << string_to_midi("A4b") << std::endl;
+    std::cout << "C0(24): " << string_to_midi("C0") << std::endl;
+    std::cout << "C-2(0): " << string_to_midi("C-2") << std::endl;
+    std::cout << "F2(53): " << string_to_midi("F2") << std::endl;
 
     if (ferror(fp)) {
       std::cerr << "Error while reading file " << filename << "\n";

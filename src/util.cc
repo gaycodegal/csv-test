@@ -41,7 +41,7 @@ int string_to_midi(std::string note) {
   if (octave < 0 || octave > 8 || (multiplier == -1 && octave > 2)) {
     return MIDI_ERROR;
   }
-  midi = note_values[c] + octave * 12;
+  midi += note_values[c] + octave * 12 * multiplier;
   if (note.length() > note_index + 1) {
     char modifier = static_cast<int>(note[note_index + 1]);
     if (modifier == '#') {
