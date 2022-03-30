@@ -7,10 +7,10 @@
 extern int MIDI_ERROR;
 
 /**
- * takes in things like "C-2#"
- * C-2# -> (1)
- * A4b -> (80)
- * returns between 0 - 127
+ * takes in things like "C#-2"
+ * C#-2 -> (1)
+ * Ab4 -> (80)
+ * returns between 0 (C-2) - 127 (G8)
  * 
  */
 int string_to_midi(std::string note);

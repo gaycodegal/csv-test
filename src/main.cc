@@ -48,6 +48,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Ab4(80): " << string_to_midi("Ab4") << std::endl;
     std::cout << "C0(24): " << string_to_midi("C0") << std::endl;
     std::cout << "C-2(0): " << string_to_midi("C-2") << std::endl;
+    std::cout << "G8(127): " << string_to_midi("G8") << std::endl;
     std::cout << "F#2(54): " << string_to_midi("F#2") << std::endl;
 
     if (ferror(fp)) {

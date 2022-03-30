@@ -11,8 +11,8 @@ char note_values[] = {
   7  //G
 };
 
-/**
- * Takes in "C-2#"
+/*
+ * Takes in "C#-2"
  */
 int string_to_midi(std::string note) {
   int midi = 24; // C0 is 24
@@ -55,7 +55,19 @@ int string_to_midi(std::string note) {
   if (octave < 0 || octave > 8 || (multiplier == -1 && octave > 2)) {
     return MIDI_ERROR;
   }
-  return midi + note_values[c] + octave * 12 * multiplier;;
+  
+  midi += note_values[c] + octave * 12 * multiplier;
+
+  // bounds check for things like A8
+  if (midi > 127) {
+    return 127;
+  }
+  // bounds check Cb-2
+  if (midi < 0) {
+    return 0;
+  }
+  
+  return midi;
 }
 
 std::optional<int> parse_int(std::string s) {
