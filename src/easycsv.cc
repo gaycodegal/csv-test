@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string_view>
+#include <span>
 
 // declare callbacks; static to not pollute the namespace
 static int is_space(unsigned char c) {
@@ -56,8 +57,10 @@ inline void CSVInfo::callback_item(std::span<char> str) {
 
 inline void CSVInfo::callback_assemble_row(int c) {
   if (!is_comment) {
-    row_parser(row_items);
-    rows++;
+    if (!is_first_line) { 
+      row_parser(row_items);
+      rows++;
+    }
     is_first_line = false;
   }
   fields = 0;

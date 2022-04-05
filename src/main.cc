@@ -20,6 +20,7 @@ enum KeyMap { code, name };
 int main(int argc, char* argv[]) {
   if (auto p{CSVParser::create(0)}; !p) {
     std::cerr << "Failed to initialize csv parser\n";
+    return EXIT_FAILURE;
   } else {
     std::string filename = "./data/qwerty.csv";
 
@@ -27,6 +28,12 @@ int main(int argc, char* argv[]) {
     if (!fp) {
       std::cout << "Failed to open " << filename << ": " << strerror(errno)
                 << "\n";
+      return EXIT_FAILURE;
+    }
+
+    if (ferror(fp)) {
+      std::cerr << "Error while reading file " << filename << "\n";
+      fclose(fp);
       return EXIT_FAILURE;
     }
 
@@ -43,6 +50,28 @@ int main(int argc, char* argv[]) {
                   }
                 });
 
+    fclose(fp);
+    filename = "./data/keymap.csv";
+    fp = fopen(filename.c_str(), "rb");
+    if (!fp) {
+      std::cout << "Failed to open " << filename << ": " << strerror(errno)
+                << "\n";
+      return EXIT_FAILURE;
+    }
+
+    if (ferror(fp)) {
+      std::cerr << "Error while reading file " << filename << "\n";
+      fclose(fp);
+      return EXIT_FAILURE;
+    }
+    
+    p->readFile(fp, std::vector<std::string>{"key", "note"},
+                [&qwerty_map](std::vector<std::string> row) {
+		  std::cout << row[0] << " -> " << row[1] << std::endl;
+		  std::cout << qwerty_map[row[0]] << " -> " << string_to_midi(row[1]) << std::endl;
+                });
+    fclose(fp);
+
     // check that qwerty map can read a = 65
     std::cout << "should be 65 (a): " << qwerty_map["a"] << std::endl;
     std::cout << "Ab4(80): " << string_to_midi("Ab4") << std::endl;
@@ -50,13 +79,5 @@ int main(int argc, char* argv[]) {
     std::cout << "C-2(0): " << string_to_midi("C-2") << std::endl;
     std::cout << "G8(127): " << string_to_midi("G8") << std::endl;
     std::cout << "F#2(54): " << string_to_midi("F#2") << std::endl;
-
-    if (ferror(fp)) {
-      std::cerr << "Error while reading file " << filename << "\n";
-      fclose(fp);
-      return EXIT_FAILURE;
-    }
-
-    fclose(fp);
   }
 }
